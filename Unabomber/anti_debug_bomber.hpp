@@ -903,6 +903,7 @@ namespace anti_debug_bomber
                 p_excep->ContextRecord->Dr7 != NULL
                 )
             {
+                printf("is_set_any_bp is_detect 1\n");
                 *p_is_detect = TRUE;
             }
 
@@ -923,6 +924,7 @@ namespace anti_debug_bomber
                 p_ctx->Dr3 != p_excep->ContextRecord->Dr3
                 )
             {
+                printf("compare_seh_bp is_detect 1\n");
                 *p_is_detect = TRUE;
             }
 
@@ -947,6 +949,7 @@ namespace anti_debug_bomber
 #endif
                 )
             {
+                printf("is_trigger_correct_dr is_detect 1\n");
                 *p_is_detect = TRUE;
             }
             return EXCEPTION_EXECUTE_HANDLER;
@@ -1355,6 +1358,7 @@ namespace anti_debug_bomber
                     }
                     __except (EXCEPTION_EXECUTE_HANDLER)
                     {
+                        printf("is_bad_hwbp is_detect 1\n");
                         is_detect = TRUE;
                     }
                 }
@@ -1381,6 +1385,7 @@ namespace anti_debug_bomber
                 crt_wrapper::safe_check_dr7_set_any(save_ctx.Dr7)
                 )
             {
+                printf("is_bad_hwbp is_detect 2\n");
                 is_detect = TRUE;
             }
 
@@ -1395,6 +1400,7 @@ namespace anti_debug_bomber
             {
                 if ((ctx_bug.ContextFlags & 0x10) == NULL)
                 {
+                    printf("is_bad_hwbp is_detect 3\n");
                     is_detect = TRUE;
                 }
             }  
@@ -1413,6 +1419,7 @@ namespace anti_debug_bomber
                 crt_wrapper::safe_check_dr7_not_set_any(ctx.Dr7)
                 )
             {
+                printf("is_bad_hwbp is_detect 4\n");
                 is_detect = TRUE; //TitanHide,SharpOD and SchyllaHide lul
             }
 
@@ -1432,6 +1439,7 @@ namespace anti_debug_bomber
                 RESTORE_INFO();
                 if (nt_status != STATUS_ACCESS_DENIED)
                 {
+                    printf("is_bad_hwbp is_detect 5\n");
                     is_detect = TRUE; //HyperHide lul
                 }
                 reinterpret_cast<decltype(&NtClose)>(nt_close)(bug_handle);
@@ -1460,6 +1468,7 @@ namespace anti_debug_bomber
                     crt_wrapper::safe_check_dr7_not_set_any(ctx.Dr7)
                     )
                 {
+                    printf("is_bad_hwbp is_detect 6\n");
                     is_detect = TRUE;  //TitanHide,SharpOD and SchyllaHide,lul
                 }
             }
@@ -1538,6 +1547,7 @@ namespace anti_debug_bomber
                 {
                     if (ctx.Dr0 != NULL || ctx.Dr0 != ctx.Dr1 || ctx.Dr2 != ctx.Dr3 || ctx.Dr3 != NULL)
                     {
+                        printf("is_bad_hwbp is_detect 7\n");
                         is_detect = TRUE;
                     }
                 }
@@ -1565,6 +1575,7 @@ namespace anti_debug_bomber
                 {
                     if (ctx.Dr0 != NULL || ctx.Dr0 != ctx.Dr1 || ctx.Dr2 != ctx.Dr3 || ctx.Dr3 != NULL)
                     {
+                        printf("is_bad_hwbp is_detect 8\n");
                         is_detect = TRUE;
                     }
                 }
@@ -2022,6 +2033,7 @@ namespace anti_debug_bomber
             //SharpOD don't hook ObjectTypeInformation 
             if (object_process->TotalNumberOfObjects != 1 && crt_wrapper::wstricmp(L"DebugObject", object_process->TypeName.Buffer) == NULL)
             {  
+                printf("is_bad_number_object_system is_detect 1\n");
                 is_detect = TRUE;
             }   
             number_debug_handle_process = object_process->TotalNumberOfHandles;
@@ -2078,6 +2090,7 @@ namespace anti_debug_bomber
                     number_debug_object_system < number_debug_object_process ||
                     number_debug_handle_system < number_debug_handle_process)
                 {
+                    printf("is_bad_number_object_system is_detect 2\n");
                     is_detect = TRUE;
                     return is_detect;
                 }
@@ -2098,6 +2111,7 @@ namespace anti_debug_bomber
                 number_debug_object_system < number_debug_object_process ||
                 number_debug_handle_system < number_debug_handle_process)
             {
+                printf("is_bad_number_object_system is_detect 3\n");
                 is_detect = TRUE;
             }
         }
@@ -2269,6 +2283,7 @@ namespace anti_debug_bomber
                             crt_wrapper::remove_object_dublicate(nt_dublicate_object,nt_close, handle_info, debug_object_inf.ObjectTypeIndex, handleInfo.UniqueProcessId, DEBUG_ALL_ACCESS);
                             if (debugger_pid)
                                 *debugger_pid = handleInfo.UniqueProcessId;
+                            printf("is_handle_attached is_detect 1\n");
                             is_detect = TRUE;
                             goto close_handle;
                             
@@ -2302,6 +2317,7 @@ namespace anti_debug_bomber
                                 
                                 if (debugger_pid)
                                     *debugger_pid = handleInfo.UniqueProcessId;
+                                printf("is_handle_attached is_detect 2\n");
                                 is_detect = TRUE;//Try hide process
                                 break;
                                 
@@ -2315,7 +2331,10 @@ namespace anti_debug_bomber
                 We check manual correct return ReturnLength and size struct
                 */
                 if (ret_lenght > ret_lenght_arry && ret_lenght - ret_lenght_arry > sizeof(SYSTEM_HANDLE_TABLE_ENTRY_INFO) * 100)
+                {
+                    printf("is_handle_attached is_detect 3\n");
                     is_detect = TRUE;
+                }
                 
             }
              

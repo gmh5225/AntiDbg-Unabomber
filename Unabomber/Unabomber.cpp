@@ -19,7 +19,7 @@ int main()
     
     while (true)
     {
-        if (GetAsyncKeyState(VK_SPACE))
+        //if (GetAsyncKeyState(VK_SPACE))
         {
            
            printf("is debug object bad ->\t%x\n", deb_obj_present.is_debug_object_present());
